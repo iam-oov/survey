@@ -6,6 +6,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('APP_SECRET_KEY')
 DEBUG = False
 
+path = os.environ.get('PATH')
+print("Current PATH:", path)
+print('-------------------sc')
+
 ALLOWED_HOSTS = []
 
 
@@ -44,8 +48,8 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'OPTIONS': {
             'loaders': [
-                    'django.template.loaders.filesystem.Loader',
-                    'django.template.loaders.app_directories.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
             ],
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -63,14 +67,21 @@ WSGI_APPLICATION = 'app_survey.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.environ.get('MYSQL_DATABASE'),
+#         'USER': os.environ.get('MYSQL_USER'),
+#         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+#         'HOST': os.environ.get('MYSQL_LOCAL_HOST'),
+#         'PORT': os.environ.get('MYSQL_PORT'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE'),
-        'USER': os.environ.get('MYSQL_USER'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-        'HOST': os.environ.get('MYSQL_LOCAL_HOST'),
-        'PORT': os.environ.get('MYSQL_PORT'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
@@ -107,6 +118,12 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -114,8 +131,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 
-LOGIN_REDIRECT_URL='index'
-LOGOUT_REDIRECT_URL='index'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
 
 # REDIS SETTINGS
 REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
@@ -130,7 +147,7 @@ BROKER_URL = "amqp://{user}:{password}@{host}:{port}/{vhost}".format(
     port=os.environ.get('RABBITMQ_DEFAULT_PORT', '5672'),
     vhost=os.environ.get('RABBITMQ_DEFAULT_VHOST', 'survey_app')
 )
-CELERY_BROKER_URL=BROKER_URL
+CELERY_BROKER_URL = BROKER_URL
 CELERY_RESULT_BACKEND = "redis"
 CELERY_TASK_RESULT_EXPIRES = 60 * 60 * 24 * 7
 
